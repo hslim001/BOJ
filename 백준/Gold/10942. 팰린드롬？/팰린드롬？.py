@@ -14,7 +14,9 @@ for i in range(1, length + 1):
         if arr[i] == arr[j]:
             if dp[i - 1][j + 1]:
                 dp[i][j] = 1
-
+result = []
 for _ in range(num):
     a, b = map(int, input().split())
-    print(dp[b][a])
+    result.append(dp[b][a])
+
+print('\n'.join(map(str, result)))
