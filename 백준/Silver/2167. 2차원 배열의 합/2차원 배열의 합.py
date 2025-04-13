@@ -1,3 +1,8 @@
+import sys
+input=sys.stdin.readline
+## 시간 : 672ms
+## 공간 : 35480kb
+
 width, length = map(int, input().split())
 arr = [list(map(int, input().split())) for _ in range(width)]
 num = int(input())
