@@ -15,10 +15,11 @@ int time, tempy, tempx;
 int dy[4] = { 0, 0, -1, 1 };
 int dx[4] = { -1, 1, 0, 0 };
 yx cur;
-vector<yx> memo;
+
 
 void delta(vector<vector<int>>& arr, int val) {
-	memo.clear();
+	vector<yx> memo;
+	vector<yx>& vec = dict[val];
 	int len = dict[val].size();
 	for (int i = 0; i < len; i++) {
 		cur = dict[val][i];
@@ -30,7 +31,7 @@ void delta(vector<vector<int>>& arr, int val) {
 			}
 		}
 	}
-	dict[val] = memo;
+	vec = memo;
 }
 void solve() {
 	
