@@ -17,9 +17,9 @@ int dx[4] = { -1, 1, 0, 0 };
 yx cur;
 
 
-void delta(vector<vector<int>>& arr, int val) {
+void delta(vector<vector<int>>& arr, vector<yx>& vec,int val) {
 	vector<yx> memo;
-	vector<yx>& vec = dict[val];
+
 	int len = dict[val].size();
 	for (int i = 0; i < len; i++) {
 		cur = dict[val][i];
@@ -50,7 +50,7 @@ void solve() {
 	{
 		time++;
 		for (int i = 1; i <= num; i++) {
-			delta(arr, i);
+			delta(arr, dict[i], i);
 		}
 	}
 	
