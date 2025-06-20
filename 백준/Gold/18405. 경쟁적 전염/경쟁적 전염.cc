@@ -3,11 +3,11 @@ using namespace std;
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <map>
+#include <unordered_map>
 int length, num;
 int arr[200][200];
 int sec, targety, targetx;
-map<int, vector<pair<int, int>>> dict;
+unordered_map<int, vector<pair<int, int>>> dict;
 
 int time, tempy, tempx;
 int dy[4] = { 0, 0, -1, 1 };
