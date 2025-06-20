@@ -1,15 +1,13 @@
 using namespace std;
 #include <iostream>
 #include <vector>
-#include <queue>
-#include <algorithm>
 #include <unordered_map>
 struct yx
 {
 	int y, x;
 };
 int length, num;
-int arr[200][200];
+
 int sec, targety, targetx;
 unordered_map<int, vector<yx>> dict;
 
@@ -19,7 +17,7 @@ int dx[4] = { -1, 1, 0, 0 };
 yx cur;
 vector<yx> memo;
 
-void delta(int val) {
+void delta(vector<vector<int>>& arr, int val) {
 	memo.clear();
 	int len = dict[val].size();
 	for (int i = 0; i < len; i++) {
@@ -35,7 +33,9 @@ void delta(int val) {
 	dict[val] = memo;
 }
 void solve() {
+	
 	cin >> length >> num;
+	vector<vector<int>> arr(length, vector<int>(length));
 	for (int i = 0; i < length; i++) {
 		for (int j = 0; j < length; j++) {
 			cin >> arr[i][j];
@@ -49,7 +49,7 @@ void solve() {
 	{
 		time++;
 		for (int i = 1; i <= num; i++) {
-			delta(i);
+			delta(arr, i);
 		}
 	}
 	
