@@ -4,33 +4,35 @@ using namespace std;
 #include <queue>
 #include <algorithm>
 #include <unordered_map>
+struct yx
+{
+	int y, x;
+};
 int length, num;
 int arr[200][200];
 int sec, targety, targetx;
-unordered_map<int, vector<pair<int, int>>> dict;
+unordered_map<int, vector<yx>> dict;
 
 int time, tempy, tempx;
 int dy[4] = { 0, 0, -1, 1 };
 int dx[4] = { -1, 1, 0, 0 };
-bool visited[200][200];
-pair<int, int> cur;
-vector<pair<int, int>> memo;
+yx cur;
+vector<yx> memo;
+
 void delta(int val) {
 	memo.clear();
-	for (int i = 0; i < dict[val].size(); i++) {
+	int len = dict[val].size();
+	for (int i = 0; i < len; i++) {
 		cur = dict[val][i];
 		for (int j = 0; j < 4; j++) {
-			tempy = cur.first + dy[j]; tempx = cur.second + dx[j];
+			tempy = cur.y + dy[j]; tempx = cur.x + dx[j];
 			if (tempy >= 0 && tempy < length && tempx >= 0 && tempx < length && arr[tempy][tempx] == 0) {
-				memo.push_back(make_pair(tempy, tempx));
+				memo.push_back({ tempy, tempx });
 				arr[tempy][tempx] = val;
 			}
 		}
 	}
-
 	dict[val] = memo;
-
-	
 }
 void solve() {
 	cin >> length >> num;
@@ -38,7 +40,7 @@ void solve() {
 		for (int j = 0; j < length; j++) {
 			cin >> arr[i][j];
 			if (arr[i][j]) {
-				dict[arr[i][j]].push_back(make_pair(i, j));
+				dict[arr[i][j]].push_back({ i, j });
 			}
 		}
 	}
