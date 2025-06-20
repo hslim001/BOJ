@@ -20,9 +20,9 @@ yx cur;
 void delta(vector<vector<int>>& arr, vector<yx>& vec,int val) {
 	vector<yx> memo;
 
-	int len = dict[val].size();
+	int len = vec.size();
 	for (int i = 0; i < len; i++) {
-		cur = dict[val][i];
+		cur = vec[i];
 		for (int j = 0; j < 4; j++) {
 			tempy = cur.y + dy[j]; tempx = cur.x + dx[j];
 			if (tempy >= 0 && tempy < length && tempx >= 0 && tempx < length && arr[tempy][tempx] == 0) {
@@ -68,6 +68,7 @@ void solve() {
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	cout.tie(NULL);
 	solve();
 	return 0;
 }
