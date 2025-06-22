@@ -1,59 +1,67 @@
-using namespace std;
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <algorithm>
+using namespace std;
 
-int num, result = 9999999, limit;
-vector<vector<int>> arr(20, vector<int>(20));
-bool visited[20] = { 0 };
+int num, result = 1e9;
+vector<vector<int>> arr;
+vector<int> startTeam, linkTeam;
+
 void calculate() {
-	int start = 0, link = 0, diff;
-	vector<int> startteam, linkteam;
-	for (int i = 0; i < num; i++) {
-		if (visited[i]) {
-			startteam.push_back(i);
-		}
-		else {
-			linkteam.push_back(i);
-		}
-	}
-	for (int i = 0; i < startteam.size(); i++) {
-		for (int j = i + 1; j < startteam.size(); j++) {
-			start += arr[startteam[i]][startteam[j]]; start += arr[startteam[j]][startteam[i]];
-		}
-	}
-	for (int i = 0; i < linkteam.size(); i++) {
-		for (int j = i + 1; j < linkteam.size(); j++) {
-			link += arr[linkteam[i]][linkteam[j]]; link += arr[linkteam[j]][linkteam[i]];
-		}
-	}
-	diff = abs(start - link);
-	if (diff < result) {
-		result = diff;
-	}
+    int start = 0, link = 0;
+    
+    // startTeam 능력치 계산
+    for (int i = 0; i < startTeam.size(); i++) {
+        for (int j = i + 1; j < startTeam.size(); j++) {
+            int a = startTeam[i], b = startTeam[j];
+            start += arr[a][b] + arr[b][a];
+        }
+    }
+    
+    // linkTeam 능력치 계산
+    for (int i = 0; i < linkTeam.size(); i++) {
+        for (int j = i + 1; j < linkTeam.size(); j++) {
+            int a = linkTeam[i], b = linkTeam[j];
+            link += arr[a][b] + arr[b][a];
+        }
+    }
+    
+    result = min(result, abs(start - link));
 }
-void dfs(int cnt, int choose) {
-	if (choose == limit) {
-		calculate();
-		return;
-	}
-	if (cnt == num) {
-		return;
-	}
-	visited[cnt] = 1;
-	dfs(cnt + 1, choose + 1);
-	visited[cnt] = 0;
-	dfs(cnt + 1, choose);
+
+void dfs(int idx, int cnt) {
+    if (cnt == num/2) {
+        linkTeam.clear();
+        for (int i = 0; i < num; i++) {
+            if (find(startTeam.begin(), startTeam.end(), i) == startTeam.end()) {
+                linkTeam.push_back(i);
+            }
+        }
+        calculate();
+        return;
+    }
+    
+    for (int i = idx; i < num; i++) {
+        startTeam.push_back(i);
+        dfs(i + 1, cnt + 1); // 다음 인덱스부터 탐색
+        startTeam.pop_back();
+    }
 }
 
 int main() {
-	cin >> num; limit = num / 2;
-	for (int i = 0; i < num; i++) {
-		for (int j = 0; j < num; j++) {
-			cin >> arr[i][j];
-		}
-	}
-	dfs(0, 0);
-	cout << result << '\n';
-	return 0;
+    cin >> num;
+    arr.resize(num, vector<int>(num));
+    for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
+            cin >> arr[i][j];
+        }
+    }
+    
+    // 0번 선수 고정 (대칭성 최적화)
+    startTeam.push_back(0);
+    dfs(1, 1); // 1번 인덱스부터 탐색
+    cout << result;
+    
+    return 0;
 }
