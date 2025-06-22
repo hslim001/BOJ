@@ -1,67 +1,57 @@
 #include <iostream>
-#include <vector>
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
-int num, result = 1e9;
-vector<vector<int>> arr;
-vector<int> startTeam, linkTeam;
+int n, a[21][21], min_diff = 1e9;
+int selected[10];
+bool start_team[21] = {false};
 
-void calculate() {
-    int start = 0, link = 0;
-    
-    // startTeam 능력치 계산
-    for (int i = 0; i < startTeam.size(); i++) {
-        for (int j = i + 1; j < startTeam.size(); j++) {
-            int a = startTeam[i], b = startTeam[j];
-            start += arr[a][b] + arr[b][a];
-        }
-    }
-    
-    // linkTeam 능력치 계산
-    for (int i = 0; i < linkTeam.size(); i++) {
-        for (int j = i + 1; j < linkTeam.size(); j++) {
-            int a = linkTeam[i], b = linkTeam[j];
-            link += arr[a][b] + arr[b][a];
-        }
-    }
-    
-    result = min(result, abs(start - link));
-}
-
-void dfs(int idx, int cnt) {
-    if (cnt == num/2) {
-        linkTeam.clear();
-        for (int i = 0; i < num; i++) {
-            if (find(startTeam.begin(), startTeam.end(), i) == startTeam.end()) {
-                linkTeam.push_back(i);
+void back(int depth, int idx, int current_sum) {
+    if (depth == n/2) {
+        int link_team[10], link_count = 0;
+        for (int i = 0; i < n; i++) {
+            if (!start_team[i]) {
+                link_team[link_count++] = i;
             }
         }
-        calculate();
+        int link_sum = 0;
+        for (int i = 0; i < link_count; i++) {
+            for (int j = i+1; j < link_count; j++) {
+                link_sum += a[link_team[i]][link_team[j]] + a[link_team[j]][link_team[i]];
+            }
+        }
+        min_diff = min(min_diff, abs(current_sum - link_sum));
         return;
     }
-    
-    for (int i = idx; i < num; i++) {
-        startTeam.push_back(i);
-        dfs(i + 1, cnt + 1); // 다음 인덱스부터 탐색
-        startTeam.pop_back();
+
+    for (int i = idx; i < n; i++) {
+        if (!start_team[i]) {
+            start_team[i] = true;
+            selected[depth] = i;
+            
+            int new_sum = current_sum;
+            for (int j = 0; j < depth; j++) {
+                new_sum += a[i][selected[j]] + a[selected[j]][i];
+            }
+            
+            back(depth+1, i+1, new_sum);
+            start_team[i] = false;
+        }
     }
 }
 
 int main() {
-    cin >> num;
-    arr.resize(num, vector<int>(num));
-    for (int i = 0; i < num; i++) {
-        for (int j = 0; j < num; j++) {
-            cin >> arr[i][j];
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> a[i][j];
         }
     }
-    
-    // 0번 선수 고정 (대칭성 최적화)
-    startTeam.push_back(0);
-    dfs(1, 1); // 1번 인덱스부터 탐색
-    cout << result;
-    
+
+    start_team[0] = true;
+    selected[0] = 0;
+    back(1, 1, 0);
+    cout << min_diff;
     return 0;
 }
