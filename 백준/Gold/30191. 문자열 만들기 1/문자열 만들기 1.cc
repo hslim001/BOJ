@@ -1,3 +1,4 @@
+
 using namespace std;
 #include <iostream>
 #include <vector>
@@ -5,34 +6,33 @@ using namespace std;
 
 int main() {
 	int length;
-	string str;
+	string str, result;
 	cin >> length;
 	cin >> str;
-	int cur = 0;
-	cout << (length / 2) * 3 << '\n';
-	for (int i = length - 1; i >= 0; i--) {
-		if (str[i] == 'S') {
-			cur++;
-			if (cur > 0) {
-				cout << "UN";
-			}
-			else {
-				cout << "N";
-			}
+	vector<char> stack;
 
+	for (int i = length - 1; i >= 0; i--) {
+		if (!stack.empty() && str[i] == stack.back()) {
+			stack.pop_back();
+			result.push_back('N');
+			continue;
+		}
+		if (str[i] == 'S')
+		{
+			stack.push_back('U');
+			result.push_back('U');
+			result.push_back('N');
 		}
 		else
 		{
-			cur--;
-			if (cur < 0) {
-				cout << "SN";
-			}
-			else {
-				cout << "N";
-			}
+			stack.push_back('S');
+			result.push_back('S');
+			result.push_back('N');
 		}
-
 	}
-
+	cout << result.size() << '\n';
+	cout << result << '\n';
 	return 0;
 }
+
+
